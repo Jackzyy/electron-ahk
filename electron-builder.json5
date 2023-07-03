@@ -6,6 +6,12 @@
     output: 'dist/release/${version}'
   },
   files: ['dist/electron', 'dist/resource'],
+  extraFiles: [
+    {
+      from: './public',
+      to: 'resources/static'
+    }
+  ],
   mac: {
     artifactName: '${productName}_${version}.${ext}',
     target: ['dmg']

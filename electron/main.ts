@@ -1,8 +1,10 @@
-import { app, BrowserWindow, Menu, Tray } from 'electron'
+import { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain } from 'electron'
 import path from 'node:path'
 
-process.env.RESOURCE = path.join(__dirname, '../resource')
-process.env.PUBLIC = app.isPackaged ? process.env.RESOURCE : path.join(process.env.RESOURCE, '../../public')
+import { start } from './utils/ahk'
+
+process.env.ROOT = path.join(app.isPackaged ? path.dirname(app.getPath('exe')) : app.getAppPath())
+process.env.PUBLIC = path.join(process.env.ROOT, app.isPackaged ? './resources/static' : './public')
 
 let win: BrowserWindow | null
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
@@ -21,21 +23,21 @@ async function createWindow() {
   if (VITE_DEV_SERVER_URL) {
     await win.loadURL(VITE_DEV_SERVER_URL)
   } else {
-    await win.loadFile(path.join(process.env.RESOURCE as string, 'index.html'))
+    await win.loadFile(path.join(__dirname, '../resource/index.html'))
   }
 }
 
 // 托盘菜单
 function contextMenu() {
-  let tray: Tray | null
-  tray = new Tray(path.join(process.env.PUBLIC as string, '1.png'))
+  const tray = new Tray(path.join(process.env.PUBLIC as string, './icon.ico'))
+
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1', type: 'radio' },
-    { label: 'Item2', type: 'radio' },
-    { label: 'Item3', type: 'radio', checked: true },
-    { label: 'Item4', type: 'radio' }
+    {
+      label: '退出',
+      click: () => app.quit()
+    }
   ])
-  tray.setToolTip('This is my application.')
+  tray.setToolTip('取色宏-测试版')
   tray.setContextMenu(contextMenu)
 }
 
@@ -46,4 +48,11 @@ app.on('window-all-closed', function () {
 app.on('ready', async () => {
   createWindow()
   contextMenu()
+})
+
+ipcMain.on('start-ahk', (event, message) => {
+  console.log(`Received message from renderer: ${message}`)
+  const res = start()
+
+  event.sender.send('end-ahk', res)
 })
