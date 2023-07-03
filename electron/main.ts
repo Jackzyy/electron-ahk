@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, Tray, session } from 'electron'
+import { app, BrowserWindow, Menu, Tray } from 'electron'
 import path from 'node:path'
 
 process.env.RESOURCE = path.join(__dirname, '../resource')
@@ -39,19 +39,11 @@ function contextMenu() {
   tray.setContextMenu(contextMenu)
 }
 
-// Vue开发工具
-async function loadDevtools() {
-  if (VITE_DEV_SERVER_URL) {
-    await session.defaultSession.loadExtension(path.resolve(__dirname, '../../devtools'))
-  }
-}
-
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('ready', async () => {
-  loadDevtools()
   createWindow()
   contextMenu()
 })

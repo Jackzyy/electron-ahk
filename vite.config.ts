@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import electron from 'vite-plugin-electron'
 import renderer from 'vite-plugin-electron-renderer'
 import vue from '@vitejs/plugin-vue'
+import VueDevTools from 'vite-plugin-vue-devtools'
+import { resolve } from 'path'
 
 export default defineConfig({
   build: {
@@ -9,6 +11,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    VueDevTools(),
     electron([
       {
         entry: 'electron/main.ts',
@@ -23,5 +26,10 @@ export default defineConfig({
       }
     ]),
     renderer()
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  }
 })
