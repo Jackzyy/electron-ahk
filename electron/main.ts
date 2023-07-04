@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain } from 'electron'
+import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
 import path from 'node:path'
 
 import { start } from './utils/ahk'
@@ -6,9 +6,11 @@ import { start } from './utils/ahk'
 process.env.ROOT = path.join(app.isPackaged ? path.dirname(app.getPath('exe')) : app.getAppPath())
 process.env.PUBLIC = path.join(process.env.ROOT, app.isPackaged ? './resources/static' : './public')
 
-let win: BrowserWindow | null
-// 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
+let win: BrowserWindow
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
+
+// 禁用GPU加速，解决启动闪黑屏
+app.disableHardwareAcceleration()
 
 // 主窗口
 async function createWindow() {
@@ -30,7 +32,6 @@ async function createWindow() {
 // 托盘菜单
 function contextMenu() {
   const tray = new Tray(path.join(process.env.PUBLIC as string, './icon.ico'))
-
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '退出',
