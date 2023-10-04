@@ -1,15 +1,7 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-
 function handleStart() {
-  window.electronAPI.sendMsgToMain('Hello from the renderer process!')
+  window.electronAPI.ahk_start('Hello from the renderer process!')
 }
-
-onMounted(() => {
-  window.electronAPI.receivMsgFromMain((message: any) => {
-    console.log(`Received message from main process: ${message}`)
-  })
-})
 </script>
 
 <template>

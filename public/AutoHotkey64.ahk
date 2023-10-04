@@ -1,3 +1,4 @@
+; 隐藏托盘图标
 ; #NoTrayIcon
 
 ; 16进制转RGB
@@ -36,23 +37,23 @@ XButton1::
     loop {
         ; START
 
-        rcd := different(0x816862, PixelGetColor(1084, 934), 10)
-        if(rcd = 0) {
-            Send "{r down}"
-            Sleep 60
-            Send "{r up}"
-            Sleep 5
-        }
+        ; rcd := different(0x816862, PixelGetColor(1084, 934), 10)
+        ; if(rcd = 0) {
+        ;     Send "{r down}"
+        ;     Sleep 60
+        ;     Send "{r up}"
+        ;     Sleep 5
+        ; }
         
-        tcd := different(0xFFE5BA, PixelGetColor(1128, 937), 10)
-        if(tcd = 0) {
-            Send "{t down}"
-            Sleep 20
-            Send "{t up}"
-            Sleep 5
-        }
+        ; tcd := different(0xFFE5BA, PixelGetColor(1128, 937), 10)
+        ; if(tcd = 0) {
+        ;     Send "{t down}"
+        ;     Sleep 20
+        ;     Send "{t up}"
+        ;     Sleep 5
+        ; }
 
-        Sleep 10
+        ; Sleep 10
         
         ; ; 1084 934 0x816862
         ; rcd := different(0x816862, PixelGetColor(1084, 934), 10)
@@ -76,16 +77,15 @@ XButton1::
 
         ; END
 
-        ; Send "{r down}"
-        ; Sleep 1
-        ; Send "{r up}"
-        ; Sleep 95
-        ; Send "{t down}"
-        ; Sleep 35
-        ; Send "{t up}"
-        ; Sleep 6
-        ; Sleep 1
-        ; Sleep 25
-
+        Send "{r down}"
+        Sleep 1
+        Send "{r up}"
+        Sleep 95
+        Send "{t down}"
+        Sleep 54
+        Send "{t up}"
+        Sleep 5
+        
+        Sleep 5
     } Until Not GetKeyState("XButton1", "P")
 }

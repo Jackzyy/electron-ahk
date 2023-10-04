@@ -1,7 +1,6 @@
 import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
 import path from 'node:path'
-
-import { start } from './utils/ahk'
+import * as ipc from './ipc'
 
 process.env.ROOT = path.join(app.isPackaged ? path.dirname(app.getPath('exe')) : app.getAppPath())
 process.env.PUBLIC = path.join(process.env.ROOT, app.isPackaged ? './resources/static' : './public')
@@ -49,11 +48,7 @@ app.on('window-all-closed', function () {
 app.on('ready', async () => {
   createWindow()
   contextMenu()
-})
 
-ipcMain.on('start-ahk', (event, message) => {
-  console.log(`Received message from renderer: ${message}`)
-  const res = start()
-
-  event.sender.send('end-ahk', res)
+  // 通信监听
+  ipc.listen()
 })
